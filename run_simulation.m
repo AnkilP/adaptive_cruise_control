@@ -27,10 +27,6 @@ time_constant_value = b*(1 - exp(-1));
 tau = qdot.time(x);
 a = 1/tau;
 
-%% Section 2
-
-%
-
 %% Plot simulation results
 figure(1);
 plot(y.Time, y.Data, 'LineWidth', 2);
