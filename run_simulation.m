@@ -12,7 +12,7 @@ sim('adaptive_cruise_control_student_version_2018a');
 y = logsout.getElement('distance_to_leader').Values;
 e = logsout.getElement('tracking_error').Values;
 u = logsout.getElement('control').Values;
-qdot = logsout.getElement('qdot').Values;
+q = logsout.getElement('q').Values;
 
 %% Section 1
 
@@ -20,15 +20,16 @@ qdot = logsout.getElement('qdot').Values;
 % g(t) = b*(1 - exp(-at))
 % g(0) = b*a
 % g ~=~ b * (1 - exp(-at)) at some t
-b = max(qdot.data);
-time_constant_value = b*(1 - exp(-1));
-%------------------
-[~, x] = min(abs(qdot.data - time_constant_value));
-tau = qdot.time(x);
-a = 1/tau;
-
-extra_calc(a, b);
+% b = max(qdot.data);
+% time_constant_value = b*(1 - exp(-1));
+% %------------------
+% [~, x] = min(abs(qdot.data - time_constant_value));
+% tau = qdot.time(x);
+% a = 1/tau;
+% 
+% extra_calc(a, b, 0.1, 5);
 display("done Section 1");
+
 %% Plot simulation results
 figure(1);
 plot(y.Time, y.Data, 'LineWidth', 2);
@@ -39,17 +40,17 @@ grid on;
 
 figure(2);
 plot(e.Time, e.Data, 'LineWidth', 2);
-title('Tracking error');
+title('Tracking Error Signal');
 xlabel('time (s)', 'Interpreter','latex', 'FontSize', 17);
 ylabel('$r(t) - y(t)$','Interpreter','latex', 'FontSize', 17);
 grid on;
 
 figure(3);
-plot(qdot.Time, qdot.Data, 'LineWidth', 2);
-title('Velocity of vehicle');
+plot(q.Time, q.Data, 'LineWidth', 2);
+title('Position of vehicle');
 xlabel('time (s)', 'Interpreter','latex', 'FontSize', 17);
 ylabel('$\dot{q}(t)$','Interpreter','latex', 'FontSize', 17);
-xline(tau);
+% xline(tau);
 grid on;
 
 figure(4);
@@ -64,8 +65,8 @@ fprintf('J1 Cost: %12.8f\r\n', J1);
 fprintf('J2 Cost: %12.8f\r\n', J2);
 fprintf('J1+J2 Cost: %12.8f\r\n', J1+J2);
 
-fprintf('b: %12.8f\r\n', b);
-fprintf('tau: %12.8f\r\n', tau);
-fprintf('b/tau: %12.8f\r\n', b/tau);
-fprintf('a: %12.8f\r\n', a);
+% fprintf('b: %12.8f\r\n', b);
+% fprintf('tau: %12.8f\r\n', tau);
+% fprintf('b/tau: %12.8f\r\n', b/tau);
+% fprintf('a: %12.8f\r\n', a);
 
