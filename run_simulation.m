@@ -28,7 +28,7 @@ tau = qdot.time(x);
 a = 1/tau;
 
 extra_calc(a, b);
-
+display("done Section 1");
 %% Plot simulation results
 figure(1);
 plot(y.Time, y.Data, 'LineWidth', 2);

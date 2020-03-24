@@ -9,7 +9,7 @@ close all;
 
 %% Simulation Parameters
 % amount of time we will simulate for - subject to change
-tend = 1000;
+tend = 100;
 
 %% Plant parameters
 g = 9.8;
