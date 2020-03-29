@@ -13,6 +13,8 @@ y = logsout.getElement('distance_to_leader').Values;
 e = logsout.getElement('tracking_error').Values;
 u = logsout.getElement('control').Values;
 q = logsout.getElement('q').Values;
+qdot = logsout.getElement('qdot').Values;
+ql = logsout.getElement('ql').Values;
 
 %% Section 1
 
@@ -38,6 +40,13 @@ xlabel('time (s)', 'Interpreter','latex', 'FontSize', 17);
 ylabel('$y(t) = q_\ell(t) - q(t)$', 'Interpreter','latex', 'FontSize', 17);
 grid on;
 
+figure(5);
+plot(ql.Time, ql.Data, 'LineWidth', 2);
+title('Lead vehicle distance');
+xlabel('time (s)', 'Interpreter','latex', 'FontSize', 17);
+ylabel('$q_\ell(t)$', 'Interpreter','latex', 'FontSize', 17);
+grid on;
+
 figure(2);
 plot(e.Time, e.Data, 'LineWidth', 2);
 title('Tracking Error Signal');
@@ -49,7 +58,7 @@ figure(3);
 plot(q.Time, q.Data, 'LineWidth', 2);
 title('Position of vehicle');
 xlabel('time (s)', 'Interpreter','latex', 'FontSize', 17);
-ylabel('$\dot{q}(t)$','Interpreter','latex', 'FontSize', 17);
+ylabel('$q(t)$','Interpreter','latex', 'FontSize', 17);
 % xline(tau);
 grid on;
 
