@@ -17,8 +17,8 @@ Vmax = 1000;
 
 %% Scenario Parameters (Things you can/should change to test your code!)
 
-q_0 = 0; % initial position of car
-qdot_0 = 0; % initial velocity of car.
+q_0 = 80; % initial position of car
+qdot_0 = 50; % initial velocity of car.
 
 % disturbance due to road's incline - numerical value will change
 theta = deg2rad(10);

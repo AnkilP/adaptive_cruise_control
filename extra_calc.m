@@ -1,4 +1,4 @@
-function [K_p, T_i, T_d, tau_d] = extra_calc(a,b, per_os, rising_time)
+function [kp, ti, td, tau_d] = extra_calc(a,b, per_os, rising_time, alpha, kpp, kip)
 %% Section 2
 
 % We want < 10% overshoot
@@ -10,24 +10,31 @@ function [K_p, T_i, T_d, tau_d] = extra_calc(a,b, per_os, rising_time)
 
 zeta = -log(per_os)/(sqrt(pi^2 + log(per_os)^2));
 omega = (2.16*zeta + 0.6)/rising_time;
-
+tau = 1/a;
 s = tf(['s']);
 desired_poly = (s^2 + 2*zeta*omega*s + omega^2)*(s + 40);
-display(desired_poly);
-tau = 1/a;
-alpha = 1;
-xx = [0; (a/b)*(tau*4.65 - 1); tau*2.9; tau*1.2] + alpha*[1; -1/b; -1; 0];
-display(xx);
+% display(desired_poly);
+[num, ~] = tfdata(desired_poly, 'v');
+controller = ((a/b)*(tau*num(2) - 1)*s^2 + tau*num(3)*s + tau*num(4) - alpha*s*((1/b) * s + 1))/(s^2 + alpha*s);
 
-K_p = (xx(3)*xx(1) - xx(4))/(xx(1)^2);
-T_i = (xx(3)*xx(1) - xx(4))/(xx(1)*xx(4));
-T_d = (xx(4) - xx(3)*xx(1) + xx(2)*xx(1)^2)/(xx(1)*(xx(4) - xx(3)*xx(1)));
-tau_d = 1/xx(1);
+[num_cn, den_cn] = tfdata(controller, 'v');
 
-display(K_p);
-display(K_p/T_i);
-display(T_d);
-display(tau_d);
+% finding PID coefficients
+kp = ((num_cn(2)*den_cn(2)) - num_cn(3))/den_cn(2)^2;
+ti = ((num_cn(2)*den_cn(2)) - num_cn(3))/(num_cn(3)*den_cn(2));
+td = (num_cn(3) - num_cn(2)*den_cn(2) + num_cn(1)*den_cn(2)^2)/(den_cn(2)*(num_cn(2)*den_cn(2) - num_cn(3)));
+tau_d = 1/den_cn(2);
+
+%finding the effective plant and controller combination for the outerloop
+%PID
+outerloop_effective_plant = controller * (b/(s + a));
+display(outerloop_effective_plant);
+num_opl = outerloop_effective_plant.Numerator{1};
+den_opl = outerloop_effective_plant.Denominator{1};
+% display(num_opl*s);
+% display(den_opl);
+chp_outerloop = num_opl * s + den_opl*(kpp*s + kip);
+% display(chp_outerloop);
 
 end
 
